@@ -1,0 +1,7 @@
+Var1 "food & dr1nk5"
+5 4.3
+( ) { } : ; , =
++ - * / > < !=
+program programa
+end ends
+var int float cout if else do while

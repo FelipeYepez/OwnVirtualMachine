@@ -1,0 +1,28 @@
+programa ; Felipe;
+
+var num, i, j: int;
+mean: float;
+
+{
+    num = 0;
+    i = 5 * 4 + 3.1;
+    j = 0;
+    if(i != 5){
+        i = 5;
+    }
+    else{
+        mean = i;
+    };
+    if(5 > 4){
+
+    };
+    do{
+        j = j + 1;
+        cout ("Print");
+    } while(j < 3);
+    cout (+3.2 * mean + 4);
+    cout ((-num * 5.3 + 5) + 6 > -4 * 5, "operacion");
+    cout(5, 6);
+    cout(5.7);
+}
+end

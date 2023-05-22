@@ -1,0 +1,1340 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> program
+Rule 1     program -> PROGRAM ID SEMICOLON r body END
+Rule 2     r -> vars
+Rule 3     r -> empty
+Rule 4     vars -> VAR o
+Rule 5     o -> ID p
+Rule 6     p -> COMA o
+Rule 7     p -> COLON type SEMICOLON q
+Rule 8     q -> empty
+Rule 9     q -> o
+Rule 10    body -> LEFTBRACE m RIGHTBRACE
+Rule 11    m -> statement m
+Rule 12    m -> empty
+Rule 13    statement -> assign
+Rule 14    statement -> condition
+Rule 15    statement -> cycle
+Rule 16    statement -> print
+Rule 17    assign -> ID EQUAL expression SEMICOLON
+Rule 18    cycle -> DO body WHILE LEFTPARENTHESIS expression RIGHTPARENTHESIS SEMICOLON
+Rule 19    condition -> IF LEFTPARENTHESIS expression RIGHTPARENTHESIS body l SEMICOLON
+Rule 20    l -> empty
+Rule 21    l -> ELSE body
+Rule 22    expression -> exp j
+Rule 23    j -> empty
+Rule 24    j -> k exp
+Rule 25    k -> GREATERTHAN
+Rule 26    k -> LESSTHAN
+Rule 27    k -> NOT
+Rule 28    print -> COUT LEFTPARENTHESIS g RIGHTPARENTHESIS SEMICOLON
+Rule 29    g -> h i
+Rule 30    h -> expression
+Rule 31    h -> CTE_STRING
+Rule 32    i -> empty
+Rule 33    i -> COMA g
+Rule 34    exp -> term e
+Rule 35    e -> empty
+Rule 36    e -> f term
+Rule 37    f -> ADD
+Rule 38    f -> MINUS
+Rule 39    term -> factor c
+Rule 40    c -> empty
+Rule 41    c -> d term
+Rule 42    d -> MULTIPLY
+Rule 43    d -> DIVIDE
+Rule 44    factor -> LEFTPARENTHESIS expression RIGHTPARENTHESIS
+Rule 45    factor -> a b
+Rule 46    a -> empty
+Rule 47    a -> ADD
+Rule 48    a -> MINUS
+Rule 49    b -> ID
+Rule 50    b -> cte
+Rule 51    type -> INT
+Rule 52    type -> FLOAT
+Rule 53    cte -> CTE_INT
+Rule 54    cte -> CTE_FLOAT
+Rule 55    empty -> <empty>
+
+Terminals, with rules where they appear
+
+ADD                  : 37 47
+COLON                : 7
+COMA                 : 6 33
+COUT                 : 28
+CTE_FLOAT            : 54
+CTE_INT              : 53
+CTE_STRING           : 31
+DIVIDE               : 43
+DO                   : 18
+ELSE                 : 21
+END                  : 1
+EQUAL                : 17
+FLOAT                : 52
+GREATERTHAN          : 25
+ID                   : 1 5 17 49
+IF                   : 19
+INT                  : 51
+LEFTBRACE            : 10
+LEFTPARENTHESIS      : 18 19 28 44
+LESSTHAN             : 26
+MINUS                : 38 48
+MULTIPLY             : 42
+NOT                  : 27
+PROGRAM              : 1
+RIGHTBRACE           : 10
+RIGHTPARENTHESIS     : 18 19 28 44
+SEMICOLON            : 1 7 17 18 19 28
+VAR                  : 4
+WHILE                : 18
+error                : 
+
+Nonterminals, with rules where they appear
+
+a                    : 45
+assign               : 13
+b                    : 45
+body                 : 1 18 19 21
+c                    : 39
+condition            : 14
+cte                  : 50
+cycle                : 15
+d                    : 41
+e                    : 34
+empty                : 3 8 12 20 23 32 35 40 46
+exp                  : 22 24
+expression           : 17 18 19 30 44
+f                    : 36
+factor               : 39
+g                    : 28 33
+h                    : 29
+i                    : 29
+j                    : 22
+k                    : 24
+l                    : 19
+m                    : 10 11
+o                    : 4 6 9
+p                    : 5
+print                : 16
+program              : 0
+q                    : 7
+r                    : 1
+statement            : 11
+term                 : 34 36 41
+type                 : 7
+vars                 : 2
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . program
+    (1) program -> . PROGRAM ID SEMICOLON r body END
+
+    PROGRAM         shift and go to state 2
+
+    program                        shift and go to state 1
+
+state 1
+
+    (0) S' -> program .
+
+
+
+state 2
+
+    (1) program -> PROGRAM . ID SEMICOLON r body END
+
+    ID              shift and go to state 3
+
+
+state 3
+
+    (1) program -> PROGRAM ID . SEMICOLON r body END
+
+    SEMICOLON       shift and go to state 4
+
+
+state 4
+
+    (1) program -> PROGRAM ID SEMICOLON . r body END
+    (2) r -> . vars
+    (3) r -> . empty
+    (4) vars -> . VAR o
+    (55) empty -> .
+
+    VAR             shift and go to state 8
+    LEFTBRACE       reduce using rule 55 (empty -> .)
+
+    r                              shift and go to state 5
+    vars                           shift and go to state 6
+    empty                          shift and go to state 7
+
+state 5
+
+    (1) program -> PROGRAM ID SEMICOLON r . body END
+    (10) body -> . LEFTBRACE m RIGHTBRACE
+
+    LEFTBRACE       shift and go to state 10
+
+    body                           shift and go to state 9
+
+state 6
+
+    (2) r -> vars .
+
+    LEFTBRACE       reduce using rule 2 (r -> vars .)
+
+
+state 7
+
+    (3) r -> empty .
+
+    LEFTBRACE       reduce using rule 3 (r -> empty .)
+
+
+state 8
+
+    (4) vars -> VAR . o
+    (5) o -> . ID p
+
+    ID              shift and go to state 12
+
+    o                              shift and go to state 11
+
+state 9
+
+    (1) program -> PROGRAM ID SEMICOLON r body . END
+
+    END             shift and go to state 13
+
+
+state 10
+
+    (10) body -> LEFTBRACE . m RIGHTBRACE
+    (11) m -> . statement m
+    (12) m -> . empty
+    (13) statement -> . assign
+    (14) statement -> . condition
+    (15) statement -> . cycle
+    (16) statement -> . print
+    (55) empty -> .
+    (17) assign -> . ID EQUAL expression SEMICOLON
+    (19) condition -> . IF LEFTPARENTHESIS expression RIGHTPARENTHESIS body l SEMICOLON
+    (18) cycle -> . DO body WHILE LEFTPARENTHESIS expression RIGHTPARENTHESIS SEMICOLON
+    (28) print -> . COUT LEFTPARENTHESIS g RIGHTPARENTHESIS SEMICOLON
+
+    RIGHTBRACE      reduce using rule 55 (empty -> .)
+    ID              shift and go to state 21
+    IF              shift and go to state 22
+    DO              shift and go to state 23
+    COUT            shift and go to state 24
+
+    m                              shift and go to state 14
+    statement                      shift and go to state 15
+    empty                          shift and go to state 16
+    assign                         shift and go to state 17
+    condition                      shift and go to state 18
+    cycle                          shift and go to state 19
+    print                          shift and go to state 20
+
+state 11
+
+    (4) vars -> VAR o .
+
+    LEFTBRACE       reduce using rule 4 (vars -> VAR o .)
+
+
+state 12
+
+    (5) o -> ID . p
+    (6) p -> . COMA o
+    (7) p -> . COLON type SEMICOLON q
+
+    COMA            shift and go to state 26
+    COLON           shift and go to state 27
+
+    p                              shift and go to state 25
+
+state 13
+
+    (1) program -> PROGRAM ID SEMICOLON r body END .
+
+    $end            reduce using rule 1 (program -> PROGRAM ID SEMICOLON r body END .)
+
+
+state 14
+
+    (10) body -> LEFTBRACE m . RIGHTBRACE
+
+    RIGHTBRACE      shift and go to state 28
+
+
+state 15
+
+    (11) m -> statement . m
+    (11) m -> . statement m
+    (12) m -> . empty
+    (13) statement -> . assign
+    (14) statement -> . condition
+    (15) statement -> . cycle
+    (16) statement -> . print
+    (55) empty -> .
+    (17) assign -> . ID EQUAL expression SEMICOLON
+    (19) condition -> . IF LEFTPARENTHESIS expression RIGHTPARENTHESIS body l SEMICOLON
+    (18) cycle -> . DO body WHILE LEFTPARENTHESIS expression RIGHTPARENTHESIS SEMICOLON
+    (28) print -> . COUT LEFTPARENTHESIS g RIGHTPARENTHESIS SEMICOLON
+
+    RIGHTBRACE      reduce using rule 55 (empty -> .)
+    ID              shift and go to state 21
+    IF              shift and go to state 22
+    DO              shift and go to state 23
+    COUT            shift and go to state 24
+
+    statement                      shift and go to state 15
+    m                              shift and go to state 29
+    empty                          shift and go to state 16
+    assign                         shift and go to state 17
+    condition                      shift and go to state 18
+    cycle                          shift and go to state 19
+    print                          shift and go to state 20
+
+state 16
+
+    (12) m -> empty .
+
+    RIGHTBRACE      reduce using rule 12 (m -> empty .)
+
+
+state 17
+
+    (13) statement -> assign .
+
+    ID              reduce using rule 13 (statement -> assign .)
+    IF              reduce using rule 13 (statement -> assign .)
+    DO              reduce using rule 13 (statement -> assign .)
+    COUT            reduce using rule 13 (statement -> assign .)
+    RIGHTBRACE      reduce using rule 13 (statement -> assign .)
+
+
+state 18
+
+    (14) statement -> condition .
+
+    ID              reduce using rule 14 (statement -> condition .)
+    IF              reduce using rule 14 (statement -> condition .)
+    DO              reduce using rule 14 (statement -> condition .)
+    COUT            reduce using rule 14 (statement -> condition .)
+    RIGHTBRACE      reduce using rule 14 (statement -> condition .)
+
+
+state 19
+
+    (15) statement -> cycle .
+
+    ID              reduce using rule 15 (statement -> cycle .)
+    IF              reduce using rule 15 (statement -> cycle .)
+    DO              reduce using rule 15 (statement -> cycle .)
+    COUT            reduce using rule 15 (statement -> cycle .)
+    RIGHTBRACE      reduce using rule 15 (statement -> cycle .)
+
+
+state 20
+
+    (16) statement -> print .
+
+    ID              reduce using rule 16 (statement -> print .)
+    IF              reduce using rule 16 (statement -> print .)
+    DO              reduce using rule 16 (statement -> print .)
+    COUT            reduce using rule 16 (statement -> print .)
+    RIGHTBRACE      reduce using rule 16 (statement -> print .)
+
+
+state 21
+
+    (17) assign -> ID . EQUAL expression SEMICOLON
+
+    EQUAL           shift and go to state 30
+
+
+state 22
+
+    (19) condition -> IF . LEFTPARENTHESIS expression RIGHTPARENTHESIS body l SEMICOLON
+
+    LEFTPARENTHESIS shift and go to state 31
+
+
+state 23
+
+    (18) cycle -> DO . body WHILE LEFTPARENTHESIS expression RIGHTPARENTHESIS SEMICOLON
+    (10) body -> . LEFTBRACE m RIGHTBRACE
+
+    LEFTBRACE       shift and go to state 10
+
+    body                           shift and go to state 32
+
+state 24
+
+    (28) print -> COUT . LEFTPARENTHESIS g RIGHTPARENTHESIS SEMICOLON
+
+    LEFTPARENTHESIS shift and go to state 33
+
+
+state 25
+
+    (5) o -> ID p .
+
+    LEFTBRACE       reduce using rule 5 (o -> ID p .)
+
+
+state 26
+
+    (6) p -> COMA . o
+    (5) o -> . ID p
+
+    ID              shift and go to state 12
+
+    o                              shift and go to state 34
+
+state 27
+
+    (7) p -> COLON . type SEMICOLON q
+    (51) type -> . INT
+    (52) type -> . FLOAT
+
+    INT             shift and go to state 36
+    FLOAT           shift and go to state 37
+
+    type                           shift and go to state 35
+
+state 28
+
+    (10) body -> LEFTBRACE m RIGHTBRACE .
+
+    END             reduce using rule 10 (body -> LEFTBRACE m RIGHTBRACE .)
+    WHILE           reduce using rule 10 (body -> LEFTBRACE m RIGHTBRACE .)
+    ELSE            reduce using rule 10 (body -> LEFTBRACE m RIGHTBRACE .)
+    SEMICOLON       reduce using rule 10 (body -> LEFTBRACE m RIGHTBRACE .)
+
+
+state 29
+
+    (11) m -> statement m .
+
+    RIGHTBRACE      reduce using rule 11 (m -> statement m .)
+
+
+state 30
+
+    (17) assign -> ID EQUAL . expression SEMICOLON
+    (22) expression -> . exp j
+    (34) exp -> . term e
+    (39) term -> . factor c
+    (44) factor -> . LEFTPARENTHESIS expression RIGHTPARENTHESIS
+    (45) factor -> . a b
+    (46) a -> . empty
+    (47) a -> . ADD
+    (48) a -> . MINUS
+    (55) empty -> .
+
+    LEFTPARENTHESIS shift and go to state 42
+    ADD             shift and go to state 45
+    MINUS           shift and go to state 46
+    ID              reduce using rule 55 (empty -> .)
+    CTE_INT         reduce using rule 55 (empty -> .)
+    CTE_FLOAT       reduce using rule 55 (empty -> .)
+
+    expression                     shift and go to state 38
+    exp                            shift and go to state 39
+    term                           shift and go to state 40
+    factor                         shift and go to state 41
+    a                              shift and go to state 43
+    empty                          shift and go to state 44
+
+state 31
+
+    (19) condition -> IF LEFTPARENTHESIS . expression RIGHTPARENTHESIS body l SEMICOLON
+    (22) expression -> . exp j
+    (34) exp -> . term e
+    (39) term -> . factor c
+    (44) factor -> . LEFTPARENTHESIS expression RIGHTPARENTHESIS
+    (45) factor -> . a b
+    (46) a -> . empty
+    (47) a -> . ADD
+    (48) a -> . MINUS
+    (55) empty -> .
+
+    LEFTPARENTHESIS shift and go to state 42
+    ADD             shift and go to state 45
+    MINUS           shift and go to state 46
+    ID              reduce using rule 55 (empty -> .)
+    CTE_INT         reduce using rule 55 (empty -> .)
+    CTE_FLOAT       reduce using rule 55 (empty -> .)
+
+    expression                     shift and go to state 47
+    exp                            shift and go to state 39
+    term                           shift and go to state 40
+    factor                         shift and go to state 41
+    a                              shift and go to state 43
+    empty                          shift and go to state 44
+
+state 32
+
+    (18) cycle -> DO body . WHILE LEFTPARENTHESIS expression RIGHTPARENTHESIS SEMICOLON
+
+    WHILE           shift and go to state 48
+
+
+state 33
+
+    (28) print -> COUT LEFTPARENTHESIS . g RIGHTPARENTHESIS SEMICOLON
+    (29) g -> . h i
+    (30) h -> . expression
+    (31) h -> . CTE_STRING
+    (22) expression -> . exp j
+    (34) exp -> . term e
+    (39) term -> . factor c
+    (44) factor -> . LEFTPARENTHESIS expression RIGHTPARENTHESIS
+    (45) factor -> . a b
+    (46) a -> . empty
+    (47) a -> . ADD
+    (48) a -> . MINUS
+    (55) empty -> .
+
+    CTE_STRING      shift and go to state 52
+    LEFTPARENTHESIS shift and go to state 42
+    ADD             shift and go to state 45
+    MINUS           shift and go to state 46
+    ID              reduce using rule 55 (empty -> .)
+    CTE_INT         reduce using rule 55 (empty -> .)
+    CTE_FLOAT       reduce using rule 55 (empty -> .)
+
+    g                              shift and go to state 49
+    h                              shift and go to state 50
+    expression                     shift and go to state 51
+    exp                            shift and go to state 39
+    term                           shift and go to state 40
+    factor                         shift and go to state 41
+    a                              shift and go to state 43
+    empty                          shift and go to state 44
+
+state 34
+
+    (6) p -> COMA o .
+
+    LEFTBRACE       reduce using rule 6 (p -> COMA o .)
+
+
+state 35
+
+    (7) p -> COLON type . SEMICOLON q
+
+    SEMICOLON       shift and go to state 53
+
+
+state 36
+
+    (51) type -> INT .
+
+    SEMICOLON       reduce using rule 51 (type -> INT .)
+
+
+state 37
+
+    (52) type -> FLOAT .
+
+    SEMICOLON       reduce using rule 52 (type -> FLOAT .)
+
+
+state 38
+
+    (17) assign -> ID EQUAL expression . SEMICOLON
+
+    SEMICOLON       shift and go to state 54
+
+
+state 39
+
+    (22) expression -> exp . j
+    (23) j -> . empty
+    (24) j -> . k exp
+    (55) empty -> .
+    (25) k -> . GREATERTHAN
+    (26) k -> . LESSTHAN
+    (27) k -> . NOT
+
+    SEMICOLON       reduce using rule 55 (empty -> .)
+    RIGHTPARENTHESIS reduce using rule 55 (empty -> .)
+    COMA            reduce using rule 55 (empty -> .)
+    GREATERTHAN     shift and go to state 58
+    LESSTHAN        shift and go to state 59
+    NOT             shift and go to state 60
+
+    j                              shift and go to state 55
+    empty                          shift and go to state 56
+    k                              shift and go to state 57
+
+state 40
+
+    (34) exp -> term . e
+    (35) e -> . empty
+    (36) e -> . f term
+    (55) empty -> .
+    (37) f -> . ADD
+    (38) f -> . MINUS
+
+    GREATERTHAN     reduce using rule 55 (empty -> .)
+    LESSTHAN        reduce using rule 55 (empty -> .)
+    NOT             reduce using rule 55 (empty -> .)
+    SEMICOLON       reduce using rule 55 (empty -> .)
+    RIGHTPARENTHESIS reduce using rule 55 (empty -> .)
+    COMA            reduce using rule 55 (empty -> .)
+    ADD             shift and go to state 64
+    MINUS           shift and go to state 65
+
+    e                              shift and go to state 61
+    empty                          shift and go to state 62
+    f                              shift and go to state 63
+
+state 41
+
+    (39) term -> factor . c
+    (40) c -> . empty
+    (41) c -> . d term
+    (55) empty -> .
+    (42) d -> . MULTIPLY
+    (43) d -> . DIVIDE
+
+    ADD             reduce using rule 55 (empty -> .)
+    MINUS           reduce using rule 55 (empty -> .)
+    GREATERTHAN     reduce using rule 55 (empty -> .)
+    LESSTHAN        reduce using rule 55 (empty -> .)
+    NOT             reduce using rule 55 (empty -> .)
+    SEMICOLON       reduce using rule 55 (empty -> .)
+    RIGHTPARENTHESIS reduce using rule 55 (empty -> .)
+    COMA            reduce using rule 55 (empty -> .)
+    MULTIPLY        shift and go to state 69
+    DIVIDE          shift and go to state 70
+
+    c                              shift and go to state 66
+    empty                          shift and go to state 67
+    d                              shift and go to state 68
+
+state 42
+
+    (44) factor -> LEFTPARENTHESIS . expression RIGHTPARENTHESIS
+    (22) expression -> . exp j
+    (34) exp -> . term e
+    (39) term -> . factor c
+    (44) factor -> . LEFTPARENTHESIS expression RIGHTPARENTHESIS
+    (45) factor -> . a b
+    (46) a -> . empty
+    (47) a -> . ADD
+    (48) a -> . MINUS
+    (55) empty -> .
+
+    LEFTPARENTHESIS shift and go to state 42
+    ADD             shift and go to state 45
+    MINUS           shift and go to state 46
+    ID              reduce using rule 55 (empty -> .)
+    CTE_INT         reduce using rule 55 (empty -> .)
+    CTE_FLOAT       reduce using rule 55 (empty -> .)
+
+    expression                     shift and go to state 71
+    exp                            shift and go to state 39
+    term                           shift and go to state 40
+    factor                         shift and go to state 41
+    a                              shift and go to state 43
+    empty                          shift and go to state 44
+
+state 43
+
+    (45) factor -> a . b
+    (49) b -> . ID
+    (50) b -> . cte
+    (53) cte -> . CTE_INT
+    (54) cte -> . CTE_FLOAT
+
+    ID              shift and go to state 73
+    CTE_INT         shift and go to state 75
+    CTE_FLOAT       shift and go to state 76
+
+    b                              shift and go to state 72
+    cte                            shift and go to state 74
+
+state 44
+
+    (46) a -> empty .
+
+    ID              reduce using rule 46 (a -> empty .)
+    CTE_INT         reduce using rule 46 (a -> empty .)
+    CTE_FLOAT       reduce using rule 46 (a -> empty .)
+
+
+state 45
+
+    (47) a -> ADD .
+
+    ID              reduce using rule 47 (a -> ADD .)
+    CTE_INT         reduce using rule 47 (a -> ADD .)
+    CTE_FLOAT       reduce using rule 47 (a -> ADD .)
+
+
+state 46
+
+    (48) a -> MINUS .
+
+    ID              reduce using rule 48 (a -> MINUS .)
+    CTE_INT         reduce using rule 48 (a -> MINUS .)
+    CTE_FLOAT       reduce using rule 48 (a -> MINUS .)
+
+
+state 47
+
+    (19) condition -> IF LEFTPARENTHESIS expression . RIGHTPARENTHESIS body l SEMICOLON
+
+    RIGHTPARENTHESIS shift and go to state 77
+
+
+state 48
+
+    (18) cycle -> DO body WHILE . LEFTPARENTHESIS expression RIGHTPARENTHESIS SEMICOLON
+
+    LEFTPARENTHESIS shift and go to state 78
+
+
+state 49
+
+    (28) print -> COUT LEFTPARENTHESIS g . RIGHTPARENTHESIS SEMICOLON
+
+    RIGHTPARENTHESIS shift and go to state 79
+
+
+state 50
+
+    (29) g -> h . i
+    (32) i -> . empty
+    (33) i -> . COMA g
+    (55) empty -> .
+
+    COMA            shift and go to state 82
+    RIGHTPARENTHESIS reduce using rule 55 (empty -> .)
+
+    i                              shift and go to state 80
+    empty                          shift and go to state 81
+
+state 51
+
+    (30) h -> expression .
+
+    COMA            reduce using rule 30 (h -> expression .)
+    RIGHTPARENTHESIS reduce using rule 30 (h -> expression .)
+
+
+state 52
+
+    (31) h -> CTE_STRING .
+
+    COMA            reduce using rule 31 (h -> CTE_STRING .)
+    RIGHTPARENTHESIS reduce using rule 31 (h -> CTE_STRING .)
+
+
+state 53
+
+    (7) p -> COLON type SEMICOLON . q
+    (8) q -> . empty
+    (9) q -> . o
+    (55) empty -> .
+    (5) o -> . ID p
+
+    LEFTBRACE       reduce using rule 55 (empty -> .)
+    ID              shift and go to state 12
+
+    q                              shift and go to state 83
+    empty                          shift and go to state 84
+    o                              shift and go to state 85
+
+state 54
+
+    (17) assign -> ID EQUAL expression SEMICOLON .
+
+    ID              reduce using rule 17 (assign -> ID EQUAL expression SEMICOLON .)
+    IF              reduce using rule 17 (assign -> ID EQUAL expression SEMICOLON .)
+    DO              reduce using rule 17 (assign -> ID EQUAL expression SEMICOLON .)
+    COUT            reduce using rule 17 (assign -> ID EQUAL expression SEMICOLON .)
+    RIGHTBRACE      reduce using rule 17 (assign -> ID EQUAL expression SEMICOLON .)
+
+
+state 55
+
+    (22) expression -> exp j .
+
+    SEMICOLON       reduce using rule 22 (expression -> exp j .)
+    RIGHTPARENTHESIS reduce using rule 22 (expression -> exp j .)
+    COMA            reduce using rule 22 (expression -> exp j .)
+
+
+state 56
+
+    (23) j -> empty .
+
+    SEMICOLON       reduce using rule 23 (j -> empty .)
+    RIGHTPARENTHESIS reduce using rule 23 (j -> empty .)
+    COMA            reduce using rule 23 (j -> empty .)
+
+
+state 57
+
+    (24) j -> k . exp
+    (34) exp -> . term e
+    (39) term -> . factor c
+    (44) factor -> . LEFTPARENTHESIS expression RIGHTPARENTHESIS
+    (45) factor -> . a b
+    (46) a -> . empty
+    (47) a -> . ADD
+    (48) a -> . MINUS
+    (55) empty -> .
+
+    LEFTPARENTHESIS shift and go to state 42
+    ADD             shift and go to state 45
+    MINUS           shift and go to state 46
+    ID              reduce using rule 55 (empty -> .)
+    CTE_INT         reduce using rule 55 (empty -> .)
+    CTE_FLOAT       reduce using rule 55 (empty -> .)
+
+    exp                            shift and go to state 86
+    term                           shift and go to state 40
+    factor                         shift and go to state 41
+    a                              shift and go to state 43
+    empty                          shift and go to state 44
+
+state 58
+
+    (25) k -> GREATERTHAN .
+
+    LEFTPARENTHESIS reduce using rule 25 (k -> GREATERTHAN .)
+    ADD             reduce using rule 25 (k -> GREATERTHAN .)
+    MINUS           reduce using rule 25 (k -> GREATERTHAN .)
+    ID              reduce using rule 25 (k -> GREATERTHAN .)
+    CTE_INT         reduce using rule 25 (k -> GREATERTHAN .)
+    CTE_FLOAT       reduce using rule 25 (k -> GREATERTHAN .)
+
+
+state 59
+
+    (26) k -> LESSTHAN .
+
+    LEFTPARENTHESIS reduce using rule 26 (k -> LESSTHAN .)
+    ADD             reduce using rule 26 (k -> LESSTHAN .)
+    MINUS           reduce using rule 26 (k -> LESSTHAN .)
+    ID              reduce using rule 26 (k -> LESSTHAN .)
+    CTE_INT         reduce using rule 26 (k -> LESSTHAN .)
+    CTE_FLOAT       reduce using rule 26 (k -> LESSTHAN .)
+
+
+state 60
+
+    (27) k -> NOT .
+
+    LEFTPARENTHESIS reduce using rule 27 (k -> NOT .)
+    ADD             reduce using rule 27 (k -> NOT .)
+    MINUS           reduce using rule 27 (k -> NOT .)
+    ID              reduce using rule 27 (k -> NOT .)
+    CTE_INT         reduce using rule 27 (k -> NOT .)
+    CTE_FLOAT       reduce using rule 27 (k -> NOT .)
+
+
+state 61
+
+    (34) exp -> term e .
+
+    GREATERTHAN     reduce using rule 34 (exp -> term e .)
+    LESSTHAN        reduce using rule 34 (exp -> term e .)
+    NOT             reduce using rule 34 (exp -> term e .)
+    SEMICOLON       reduce using rule 34 (exp -> term e .)
+    RIGHTPARENTHESIS reduce using rule 34 (exp -> term e .)
+    COMA            reduce using rule 34 (exp -> term e .)
+
+
+state 62
+
+    (35) e -> empty .
+
+    GREATERTHAN     reduce using rule 35 (e -> empty .)
+    LESSTHAN        reduce using rule 35 (e -> empty .)
+    NOT             reduce using rule 35 (e -> empty .)
+    SEMICOLON       reduce using rule 35 (e -> empty .)
+    RIGHTPARENTHESIS reduce using rule 35 (e -> empty .)
+    COMA            reduce using rule 35 (e -> empty .)
+
+
+state 63
+
+    (36) e -> f . term
+    (39) term -> . factor c
+    (44) factor -> . LEFTPARENTHESIS expression RIGHTPARENTHESIS
+    (45) factor -> . a b
+    (46) a -> . empty
+    (47) a -> . ADD
+    (48) a -> . MINUS
+    (55) empty -> .
+
+    LEFTPARENTHESIS shift and go to state 42
+    ADD             shift and go to state 45
+    MINUS           shift and go to state 46
+    ID              reduce using rule 55 (empty -> .)
+    CTE_INT         reduce using rule 55 (empty -> .)
+    CTE_FLOAT       reduce using rule 55 (empty -> .)
+
+    term                           shift and go to state 87
+    factor                         shift and go to state 41
+    a                              shift and go to state 43
+    empty                          shift and go to state 44
+
+state 64
+
+    (37) f -> ADD .
+
+    LEFTPARENTHESIS reduce using rule 37 (f -> ADD .)
+    ADD             reduce using rule 37 (f -> ADD .)
+    MINUS           reduce using rule 37 (f -> ADD .)
+    ID              reduce using rule 37 (f -> ADD .)
+    CTE_INT         reduce using rule 37 (f -> ADD .)
+    CTE_FLOAT       reduce using rule 37 (f -> ADD .)
+
+
+state 65
+
+    (38) f -> MINUS .
+
+    LEFTPARENTHESIS reduce using rule 38 (f -> MINUS .)
+    ADD             reduce using rule 38 (f -> MINUS .)
+    MINUS           reduce using rule 38 (f -> MINUS .)
+    ID              reduce using rule 38 (f -> MINUS .)
+    CTE_INT         reduce using rule 38 (f -> MINUS .)
+    CTE_FLOAT       reduce using rule 38 (f -> MINUS .)
+
+
+state 66
+
+    (39) term -> factor c .
+
+    ADD             reduce using rule 39 (term -> factor c .)
+    MINUS           reduce using rule 39 (term -> factor c .)
+    GREATERTHAN     reduce using rule 39 (term -> factor c .)
+    LESSTHAN        reduce using rule 39 (term -> factor c .)
+    NOT             reduce using rule 39 (term -> factor c .)
+    SEMICOLON       reduce using rule 39 (term -> factor c .)
+    RIGHTPARENTHESIS reduce using rule 39 (term -> factor c .)
+    COMA            reduce using rule 39 (term -> factor c .)
+
+
+state 67
+
+    (40) c -> empty .
+
+    ADD             reduce using rule 40 (c -> empty .)
+    MINUS           reduce using rule 40 (c -> empty .)
+    GREATERTHAN     reduce using rule 40 (c -> empty .)
+    LESSTHAN        reduce using rule 40 (c -> empty .)
+    NOT             reduce using rule 40 (c -> empty .)
+    SEMICOLON       reduce using rule 40 (c -> empty .)
+    RIGHTPARENTHESIS reduce using rule 40 (c -> empty .)
+    COMA            reduce using rule 40 (c -> empty .)
+
+
+state 68
+
+    (41) c -> d . term
+    (39) term -> . factor c
+    (44) factor -> . LEFTPARENTHESIS expression RIGHTPARENTHESIS
+    (45) factor -> . a b
+    (46) a -> . empty
+    (47) a -> . ADD
+    (48) a -> . MINUS
+    (55) empty -> .
+
+    LEFTPARENTHESIS shift and go to state 42
+    ADD             shift and go to state 45
+    MINUS           shift and go to state 46
+    ID              reduce using rule 55 (empty -> .)
+    CTE_INT         reduce using rule 55 (empty -> .)
+    CTE_FLOAT       reduce using rule 55 (empty -> .)
+
+    term                           shift and go to state 88
+    factor                         shift and go to state 41
+    a                              shift and go to state 43
+    empty                          shift and go to state 44
+
+state 69
+
+    (42) d -> MULTIPLY .
+
+    LEFTPARENTHESIS reduce using rule 42 (d -> MULTIPLY .)
+    ADD             reduce using rule 42 (d -> MULTIPLY .)
+    MINUS           reduce using rule 42 (d -> MULTIPLY .)
+    ID              reduce using rule 42 (d -> MULTIPLY .)
+    CTE_INT         reduce using rule 42 (d -> MULTIPLY .)
+    CTE_FLOAT       reduce using rule 42 (d -> MULTIPLY .)
+
+
+state 70
+
+    (43) d -> DIVIDE .
+
+    LEFTPARENTHESIS reduce using rule 43 (d -> DIVIDE .)
+    ADD             reduce using rule 43 (d -> DIVIDE .)
+    MINUS           reduce using rule 43 (d -> DIVIDE .)
+    ID              reduce using rule 43 (d -> DIVIDE .)
+    CTE_INT         reduce using rule 43 (d -> DIVIDE .)
+    CTE_FLOAT       reduce using rule 43 (d -> DIVIDE .)
+
+
+state 71
+
+    (44) factor -> LEFTPARENTHESIS expression . RIGHTPARENTHESIS
+
+    RIGHTPARENTHESIS shift and go to state 89
+
+
+state 72
+
+    (45) factor -> a b .
+
+    MULTIPLY        reduce using rule 45 (factor -> a b .)
+    DIVIDE          reduce using rule 45 (factor -> a b .)
+    ADD             reduce using rule 45 (factor -> a b .)
+    MINUS           reduce using rule 45 (factor -> a b .)
+    GREATERTHAN     reduce using rule 45 (factor -> a b .)
+    LESSTHAN        reduce using rule 45 (factor -> a b .)
+    NOT             reduce using rule 45 (factor -> a b .)
+    SEMICOLON       reduce using rule 45 (factor -> a b .)
+    RIGHTPARENTHESIS reduce using rule 45 (factor -> a b .)
+    COMA            reduce using rule 45 (factor -> a b .)
+
+
+state 73
+
+    (49) b -> ID .
+
+    MULTIPLY        reduce using rule 49 (b -> ID .)
+    DIVIDE          reduce using rule 49 (b -> ID .)
+    ADD             reduce using rule 49 (b -> ID .)
+    MINUS           reduce using rule 49 (b -> ID .)
+    GREATERTHAN     reduce using rule 49 (b -> ID .)
+    LESSTHAN        reduce using rule 49 (b -> ID .)
+    NOT             reduce using rule 49 (b -> ID .)
+    SEMICOLON       reduce using rule 49 (b -> ID .)
+    RIGHTPARENTHESIS reduce using rule 49 (b -> ID .)
+    COMA            reduce using rule 49 (b -> ID .)
+
+
+state 74
+
+    (50) b -> cte .
+
+    MULTIPLY        reduce using rule 50 (b -> cte .)
+    DIVIDE          reduce using rule 50 (b -> cte .)
+    ADD             reduce using rule 50 (b -> cte .)
+    MINUS           reduce using rule 50 (b -> cte .)
+    GREATERTHAN     reduce using rule 50 (b -> cte .)
+    LESSTHAN        reduce using rule 50 (b -> cte .)
+    NOT             reduce using rule 50 (b -> cte .)
+    SEMICOLON       reduce using rule 50 (b -> cte .)
+    RIGHTPARENTHESIS reduce using rule 50 (b -> cte .)
+    COMA            reduce using rule 50 (b -> cte .)
+
+
+state 75
+
+    (53) cte -> CTE_INT .
+
+    MULTIPLY        reduce using rule 53 (cte -> CTE_INT .)
+    DIVIDE          reduce using rule 53 (cte -> CTE_INT .)
+    ADD             reduce using rule 53 (cte -> CTE_INT .)
+    MINUS           reduce using rule 53 (cte -> CTE_INT .)
+    GREATERTHAN     reduce using rule 53 (cte -> CTE_INT .)
+    LESSTHAN        reduce using rule 53 (cte -> CTE_INT .)
+    NOT             reduce using rule 53 (cte -> CTE_INT .)
+    SEMICOLON       reduce using rule 53 (cte -> CTE_INT .)
+    RIGHTPARENTHESIS reduce using rule 53 (cte -> CTE_INT .)
+    COMA            reduce using rule 53 (cte -> CTE_INT .)
+
+
+state 76
+
+    (54) cte -> CTE_FLOAT .
+
+    MULTIPLY        reduce using rule 54 (cte -> CTE_FLOAT .)
+    DIVIDE          reduce using rule 54 (cte -> CTE_FLOAT .)
+    ADD             reduce using rule 54 (cte -> CTE_FLOAT .)
+    MINUS           reduce using rule 54 (cte -> CTE_FLOAT .)
+    GREATERTHAN     reduce using rule 54 (cte -> CTE_FLOAT .)
+    LESSTHAN        reduce using rule 54 (cte -> CTE_FLOAT .)
+    NOT             reduce using rule 54 (cte -> CTE_FLOAT .)
+    SEMICOLON       reduce using rule 54 (cte -> CTE_FLOAT .)
+    RIGHTPARENTHESIS reduce using rule 54 (cte -> CTE_FLOAT .)
+    COMA            reduce using rule 54 (cte -> CTE_FLOAT .)
+
+
+state 77
+
+    (19) condition -> IF LEFTPARENTHESIS expression RIGHTPARENTHESIS . body l SEMICOLON
+    (10) body -> . LEFTBRACE m RIGHTBRACE
+
+    LEFTBRACE       shift and go to state 10
+
+    body                           shift and go to state 90
+
+state 78
+
+    (18) cycle -> DO body WHILE LEFTPARENTHESIS . expression RIGHTPARENTHESIS SEMICOLON
+    (22) expression -> . exp j
+    (34) exp -> . term e
+    (39) term -> . factor c
+    (44) factor -> . LEFTPARENTHESIS expression RIGHTPARENTHESIS
+    (45) factor -> . a b
+    (46) a -> . empty
+    (47) a -> . ADD
+    (48) a -> . MINUS
+    (55) empty -> .
+
+    LEFTPARENTHESIS shift and go to state 42
+    ADD             shift and go to state 45
+    MINUS           shift and go to state 46
+    ID              reduce using rule 55 (empty -> .)
+    CTE_INT         reduce using rule 55 (empty -> .)
+    CTE_FLOAT       reduce using rule 55 (empty -> .)
+
+    expression                     shift and go to state 91
+    exp                            shift and go to state 39
+    term                           shift and go to state 40
+    factor                         shift and go to state 41
+    a                              shift and go to state 43
+    empty                          shift and go to state 44
+
+state 79
+
+    (28) print -> COUT LEFTPARENTHESIS g RIGHTPARENTHESIS . SEMICOLON
+
+    SEMICOLON       shift and go to state 92
+
+
+state 80
+
+    (29) g -> h i .
+
+    RIGHTPARENTHESIS reduce using rule 29 (g -> h i .)
+
+
+state 81
+
+    (32) i -> empty .
+
+    RIGHTPARENTHESIS reduce using rule 32 (i -> empty .)
+
+
+state 82
+
+    (33) i -> COMA . g
+    (29) g -> . h i
+    (30) h -> . expression
+    (31) h -> . CTE_STRING
+    (22) expression -> . exp j
+    (34) exp -> . term e
+    (39) term -> . factor c
+    (44) factor -> . LEFTPARENTHESIS expression RIGHTPARENTHESIS
+    (45) factor -> . a b
+    (46) a -> . empty
+    (47) a -> . ADD
+    (48) a -> . MINUS
+    (55) empty -> .
+
+    CTE_STRING      shift and go to state 52
+    LEFTPARENTHESIS shift and go to state 42
+    ADD             shift and go to state 45
+    MINUS           shift and go to state 46
+    ID              reduce using rule 55 (empty -> .)
+    CTE_INT         reduce using rule 55 (empty -> .)
+    CTE_FLOAT       reduce using rule 55 (empty -> .)
+
+    g                              shift and go to state 93
+    h                              shift and go to state 50
+    expression                     shift and go to state 51
+    exp                            shift and go to state 39
+    term                           shift and go to state 40
+    factor                         shift and go to state 41
+    a                              shift and go to state 43
+    empty                          shift and go to state 44
+
+state 83
+
+    (7) p -> COLON type SEMICOLON q .
+
+    LEFTBRACE       reduce using rule 7 (p -> COLON type SEMICOLON q .)
+
+
+state 84
+
+    (8) q -> empty .
+
+    LEFTBRACE       reduce using rule 8 (q -> empty .)
+
+
+state 85
+
+    (9) q -> o .
+
+    LEFTBRACE       reduce using rule 9 (q -> o .)
+
+
+state 86
+
+    (24) j -> k exp .
+
+    SEMICOLON       reduce using rule 24 (j -> k exp .)
+    RIGHTPARENTHESIS reduce using rule 24 (j -> k exp .)
+    COMA            reduce using rule 24 (j -> k exp .)
+
+
+state 87
+
+    (36) e -> f term .
+
+    GREATERTHAN     reduce using rule 36 (e -> f term .)
+    LESSTHAN        reduce using rule 36 (e -> f term .)
+    NOT             reduce using rule 36 (e -> f term .)
+    SEMICOLON       reduce using rule 36 (e -> f term .)
+    RIGHTPARENTHESIS reduce using rule 36 (e -> f term .)
+    COMA            reduce using rule 36 (e -> f term .)
+
+
+state 88
+
+    (41) c -> d term .
+
+    ADD             reduce using rule 41 (c -> d term .)
+    MINUS           reduce using rule 41 (c -> d term .)
+    GREATERTHAN     reduce using rule 41 (c -> d term .)
+    LESSTHAN        reduce using rule 41 (c -> d term .)
+    NOT             reduce using rule 41 (c -> d term .)
+    SEMICOLON       reduce using rule 41 (c -> d term .)
+    RIGHTPARENTHESIS reduce using rule 41 (c -> d term .)
+    COMA            reduce using rule 41 (c -> d term .)
+
+
+state 89
+
+    (44) factor -> LEFTPARENTHESIS expression RIGHTPARENTHESIS .
+
+    MULTIPLY        reduce using rule 44 (factor -> LEFTPARENTHESIS expression RIGHTPARENTHESIS .)
+    DIVIDE          reduce using rule 44 (factor -> LEFTPARENTHESIS expression RIGHTPARENTHESIS .)
+    ADD             reduce using rule 44 (factor -> LEFTPARENTHESIS expression RIGHTPARENTHESIS .)
+    MINUS           reduce using rule 44 (factor -> LEFTPARENTHESIS expression RIGHTPARENTHESIS .)
+    GREATERTHAN     reduce using rule 44 (factor -> LEFTPARENTHESIS expression RIGHTPARENTHESIS .)
+    LESSTHAN        reduce using rule 44 (factor -> LEFTPARENTHESIS expression RIGHTPARENTHESIS .)
+    NOT             reduce using rule 44 (factor -> LEFTPARENTHESIS expression RIGHTPARENTHESIS .)
+    SEMICOLON       reduce using rule 44 (factor -> LEFTPARENTHESIS expression RIGHTPARENTHESIS .)
+    RIGHTPARENTHESIS reduce using rule 44 (factor -> LEFTPARENTHESIS expression RIGHTPARENTHESIS .)
+    COMA            reduce using rule 44 (factor -> LEFTPARENTHESIS expression RIGHTPARENTHESIS .)
+
+
+state 90
+
+    (19) condition -> IF LEFTPARENTHESIS expression RIGHTPARENTHESIS body . l SEMICOLON
+    (20) l -> . empty
+    (21) l -> . ELSE body
+    (55) empty -> .
+
+    ELSE            shift and go to state 96
+    SEMICOLON       reduce using rule 55 (empty -> .)
+
+    l                              shift and go to state 94
+    empty                          shift and go to state 95
+
+state 91
+
+    (18) cycle -> DO body WHILE LEFTPARENTHESIS expression . RIGHTPARENTHESIS SEMICOLON
+
+    RIGHTPARENTHESIS shift and go to state 97
+
+
+state 92
+
+    (28) print -> COUT LEFTPARENTHESIS g RIGHTPARENTHESIS SEMICOLON .
+
+    ID              reduce using rule 28 (print -> COUT LEFTPARENTHESIS g RIGHTPARENTHESIS SEMICOLON .)
+    IF              reduce using rule 28 (print -> COUT LEFTPARENTHESIS g RIGHTPARENTHESIS SEMICOLON .)
+    DO              reduce using rule 28 (print -> COUT LEFTPARENTHESIS g RIGHTPARENTHESIS SEMICOLON .)
+    COUT            reduce using rule 28 (print -> COUT LEFTPARENTHESIS g RIGHTPARENTHESIS SEMICOLON .)
+    RIGHTBRACE      reduce using rule 28 (print -> COUT LEFTPARENTHESIS g RIGHTPARENTHESIS SEMICOLON .)
+
+
+state 93
+
+    (33) i -> COMA g .
+
+    RIGHTPARENTHESIS reduce using rule 33 (i -> COMA g .)
+
+
+state 94
+
+    (19) condition -> IF LEFTPARENTHESIS expression RIGHTPARENTHESIS body l . SEMICOLON
+
+    SEMICOLON       shift and go to state 98
+
+
+state 95
+
+    (20) l -> empty .
+
+    SEMICOLON       reduce using rule 20 (l -> empty .)
+
+
+state 96
+
+    (21) l -> ELSE . body
+    (10) body -> . LEFTBRACE m RIGHTBRACE
+
+    LEFTBRACE       shift and go to state 10
+
+    body                           shift and go to state 99
+
+state 97
+
+    (18) cycle -> DO body WHILE LEFTPARENTHESIS expression RIGHTPARENTHESIS . SEMICOLON
+
+    SEMICOLON       shift and go to state 100
+
+
+state 98
+
+    (19) condition -> IF LEFTPARENTHESIS expression RIGHTPARENTHESIS body l SEMICOLON .
+
+    ID              reduce using rule 19 (condition -> IF LEFTPARENTHESIS expression RIGHTPARENTHESIS body l SEMICOLON .)
+    IF              reduce using rule 19 (condition -> IF LEFTPARENTHESIS expression RIGHTPARENTHESIS body l SEMICOLON .)
+    DO              reduce using rule 19 (condition -> IF LEFTPARENTHESIS expression RIGHTPARENTHESIS body l SEMICOLON .)
+    COUT            reduce using rule 19 (condition -> IF LEFTPARENTHESIS expression RIGHTPARENTHESIS body l SEMICOLON .)
+    RIGHTBRACE      reduce using rule 19 (condition -> IF LEFTPARENTHESIS expression RIGHTPARENTHESIS body l SEMICOLON .)
+
+
+state 99
+
+    (21) l -> ELSE body .
+
+    SEMICOLON       reduce using rule 21 (l -> ELSE body .)
+
+
+state 100
+
+    (18) cycle -> DO body WHILE LEFTPARENTHESIS expression RIGHTPARENTHESIS SEMICOLON .
+
+    ID              reduce using rule 18 (cycle -> DO body WHILE LEFTPARENTHESIS expression RIGHTPARENTHESIS SEMICOLON .)
+    IF              reduce using rule 18 (cycle -> DO body WHILE LEFTPARENTHESIS expression RIGHTPARENTHESIS SEMICOLON .)
+    DO              reduce using rule 18 (cycle -> DO body WHILE LEFTPARENTHESIS expression RIGHTPARENTHESIS SEMICOLON .)
+    COUT            reduce using rule 18 (cycle -> DO body WHILE LEFTPARENTHESIS expression RIGHTPARENTHESIS SEMICOLON .)
+    RIGHTBRACE      reduce using rule 18 (cycle -> DO body WHILE LEFTPARENTHESIS expression RIGHTPARENTHESIS SEMICOLON .)
+
