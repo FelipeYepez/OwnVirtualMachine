@@ -1,5 +1,6 @@
 import ply.lex as lex
 import ply.yacc as yacc
+import pandas as pd
 
 # List of reserved words used by 'Patito' language
 reserved = {
@@ -98,7 +99,8 @@ def PatitoLexer():
 
     # Lexer error handling rule
     def t_error(t):
-        print("   Invalid character: ", t.value[0])
+        print("   Invalid character: {", t.value[0], "} in line", 
+                  t.lineno, " at position ", t.lexpos)
         t.lexer.skip(1)
 
     # Build the lexer
@@ -110,33 +112,57 @@ def PatitoLexer():
 # Parser
 #####################################################
 def PatitoParser():
+    var_table = {}
+
     # Define CFG (Context free Grammars) from Patito Language
     def p_program(p):
-        '''program : PROGRAM ID SEMICOLON r body END
-        r       : vars
-                | empty'''
+        'program : PROGRAM ID SEMICOLON r body END'
+        df_var_table = pd.DataFrame.from_dict(var_table, orient='index', columns=['Type'])
+        df_var_table.index.name = 'Variable'
+        print(df_var_table)
+
+    def p_r(p):
+        '''r : vars
+             | empty'''
 
 
     def p_vars(p):
-        '''vars : VAR o
-        o    : ID p
-        p    : COMA o
-                | COLON type SEMICOLON q
-        q    : empty
-                | o'''
+        'vars : VAR o'
+    
+    def p_o(p):
+        'o : s p'
+
+    def p_s(p):
+        's : ID'
+        var_id = p[1]
+        if var_id not in var_table:
+            var_table[var_id] = None
+        else:
+            print("Error in line", p.lineno(1), ": Variable {", var_id, "} already exists.")
+
+    def p_p(p):
+        '''p : COMA o
+             | COLON type SEMICOLON q'''
+        
+    def p_q(p):
+        '''q : empty
+             | o'''
+        # print("pq", var_types)
 
 
     def p_body(p):
-        '''body : LEFTBRACE m RIGHTBRACE
-        m    : statement m
-                | empty'''
+        'body : LEFTBRACE m RIGHTBRACE'
+
+    def p_m(p):
+        '''m : statement m
+             | empty'''
 
 
     def p_statement(p):
         '''statement : assign
-                    | condition
-                    | cycle
-                    | print'''
+                     | condition
+                     | cycle
+                     | print'''
 
 
     def p_assign(p):
@@ -148,43 +174,63 @@ def PatitoParser():
 
 
     def p_condition(p):
-        '''condition : IF LEFTPARENTHESIS expression RIGHTPARENTHESIS body l SEMICOLON
-        l         : empty
-                    | ELSE body'''
+        'condition : IF LEFTPARENTHESIS expression RIGHTPARENTHESIS body l SEMICOLON'
+    
+    def p_l(p):
+        '''l : empty
+             | ELSE body'''
 
 
     def p_expression(p):
-        '''expression : exp j
-        j          : empty
-                    | k exp
-        k          : GREATERTHAN
-                    | LESSTHAN
-                    | NOT'''
+        'expression : exp j'
+    
+    def p_j(p):
+        '''j : empty
+             | k exp'''
+        
+    def p_k(p):
+        '''k : GREATERTHAN
+             | LESSTHAN
+             | NOT'''
 
 
     def p_print(p):
-        '''print : COUT LEFTPARENTHESIS g RIGHTPARENTHESIS SEMICOLON
-        g     : h i
-        h     : expression
-                | CTE_STRING
-        i     : empty
-                | COMA g'''
+        'print : COUT LEFTPARENTHESIS g RIGHTPARENTHESIS SEMICOLON'
+        
+    def p_g(p):
+        'g : h i'
+    
+    def p_h(p):
+        '''h : expression
+             | CTE_STRING'''
+
+    def p_i(p):
+        '''i : empty
+             | COMA g'''
 
 
     def p_exp(p):
-        '''exp : term e
-        e   : empty
-            | f term
-        f   : ADD
-            | MINUS'''
+        'exp : term e'
+
+    def p_e(p):
+        '''e : empty
+             | f term'''
+    
+    def p_f(p):
+        '''f : ADD
+             | MINUS'''
 
 
     def p_term(p):
-        '''term : factor c
-        c    : empty
-                | d term
-        d    : MULTIPLY
-                | DIVIDE'''
+        'term : factor c'
+    
+    def p_c(p):
+        '''c : empty
+             | d term'''
+    
+    def p_d(p):
+        '''d : MULTIPLY
+             | DIVIDE'''
 
 
     def p_factor(p):
@@ -200,6 +246,10 @@ def PatitoParser():
     def p_type(p):
         '''type : INT
                 | FLOAT'''
+        var_type = p[1]
+        for key in var_table:
+            if var_table[key] is None:
+                var_table[key] = var_type
 
 
     def p_cte(p):
@@ -216,6 +266,9 @@ def PatitoParser():
     # Error rule for syntax errors
     def p_error(p):
         print("  Syntax error in input")
+        if p:
+            print("    Expected token before {", p.value, "} in line", 
+                  p.lineno, " at position ", p.lexpos)
 
     return yacc.yacc(start='program')
 
@@ -224,47 +277,52 @@ def PatitoParser():
 #####################################################
 # Test Lexer
 #####################################################
-def test_lexer(lexer, data):
+def test_lexer(data):
+    # Create Lexer
+    lexer = PatitoLexer()
     lexer.input(data)
     while True:
         tok = lexer.token()
         if not tok:
             break      # No more input
-        # print(tok.type, tok.value)
+        # Print detected tokens
+        # print(tok.type, " | ", tok.value)
 
 
 #####################################################
 # Test Parser
 #####################################################
-def test_parser(parser, data):
+def test_parser(data):
+    # Create Parser
+    parser = PatitoParser()
     parser.parse(data)
 
 
-# Create Lexer and Parser
-lexer = PatitoLexer()
-parser = PatitoParser()
 
+#####################################################
+# Test cases for the Lexer and Parser
+#####################################################
 def test_cases():
     with open("test_lexer_invalido.txt", "r") as file:
         data = file.read()
-        print("Testing incorrect lexer...")
-        test_lexer(lexer, data)
+        print("Testing invalid lexer file...")
+        test_lexer(data)
         print("\n\n")
     with open("test_lexer_valido.txt", "r") as file:
         data = file.read()
-        print("Testing correct lexer...")
-        test_lexer(lexer, data)
-        print("\n\n")
-    with open("test_parser_valido.txt", "r") as file:
-        data = file.read()
-        print("Testing correct parser...")
-        test_parser(parser, data)
+        print("Testing valid lexer file...")
+        test_lexer(data)
         print("\n\n")
     with open("test_parser_invalido.txt", "r") as file:
         data = file.read()
-        print("Testing incorrect parser...")
-        test_parser(parser, data)
+        print("Testing invalid parser file...")
+        test_parser(data)
+        print("\n\n")
+    with open("test_parser_valido.txt", "r") as file:
+        data = file.read()
+        print("Testing valid parser file...")
+        test_parser(data)
         print("\n\n")
 
-
+# Excecute test cases
 test_cases()

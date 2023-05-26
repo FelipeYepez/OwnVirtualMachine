@@ -1,7 +1,7 @@
-programa ; Felipe;
+program Felipe;
 
 var num, i, j: int;
-mean: float;
+mean, num: float;
 
 {
     num = 0;
@@ -15,7 +15,7 @@ mean: float;
     };
     if(5 > 4){
 
-    };
+    }
     do{
         j = j + 1;
         cout ("Print");
