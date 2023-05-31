@@ -70,9 +70,9 @@ def PatitoLexer():
 
 
     def t_CTE_STRING(t):
-        # r'\"[a-zA-Z0-9]*\"'
+        # r'\'[a-zA-Z0-9]*\''
         r'\".*?\"'
-        # Delete " "
+        # Delete ' '
         t.value = t.value[1:-1]
         return t
 
@@ -99,8 +99,8 @@ def PatitoLexer():
 
     # Lexer error handling rule
     def t_error(t):
-        print("   Invalid character: {", t.value[0], "} in line", 
-                  t.lineno, " at position ", t.lexpos)
+        print('   Invalid character: ', t.value[0], ' in line', 
+                  t.lineno, ' at position ', t.lexpos)
         t.lexer.skip(1)
 
     # Build the lexer
@@ -111,19 +111,16 @@ def PatitoLexer():
 #####################################################
 # Parser
 #####################################################
-def PatitoParser():
-    # Create memory
-    memory = [None] * 1000
+def PatitoParser(print_intermediate_code = False, quads = [], var_table = {}, cte_table = {}):
     # Define start of memory for each type
-    cont_int = 0
-    cont_float = 200
-    cont_bool = 400
-    cont_cte_int = 600
-    cont_cte_float = 750
-    cont_cte_string = 900
+    cont_cte_int = 0
+    cont_cte_float = 1000
+    cont_cte_string = 2000
+    cont_int = 3000
+    cont_float = 4000
+    cont_bool = 5000
     # Create dictionaries to store memory location and type of each constant and variable
-    var_table = {}
-    cte_table = {}
+    
     # Helper to detect change of sign
     change_symbol = False
     # Stack operators, operands and jumps to perform intermediate code quadriples
@@ -131,7 +128,7 @@ def PatitoParser():
     stack_operators = [] # + -
     stack_jumps = []
     cont_quads = 0
-    quads = []
+    
     # Semantic rules between types operators
     semantics = {
             ('int', 'int', '+'): 'int',
@@ -173,7 +170,6 @@ def PatitoParser():
         if res_type != None:
             memory_dir = quad[3]
             stack_operands.append((memory_dir, res_type))
-        # TODO if any operand were a temporal space, delete space and show its available
 
 
     # Helper function to build quadriple from operations
@@ -185,25 +181,22 @@ def PatitoParser():
         if (r_type, l_type, operator) in semantics:
             res_type = semantics[(r_type, l_type, operator)]
             if res_type == 'int':
-                # TODO operator en quad seria direccion de operator
                 nonlocal cont_int
                 quad = (operator, l_operand_mem, r_operand_mem, cont_int)
                 save_quad(quad, res_type)
                 cont_int += 1
             elif res_type == 'float':
-                # TODO operator en quad seria direccion de operator
                 nonlocal cont_float
                 quad = (operator, l_operand_mem, r_operand_mem, cont_float)
                 save_quad(quad, res_type)
                 cont_float += 1
             elif res_type == 'bool':
-                # TODO operator en quad seria direccion de operator
                 nonlocal cont_bool
                 quad = (operator, l_operand_mem, r_operand_mem, cont_bool)
                 save_quad(quad, res_type)
                 cont_bool += 1
         else:
-            raise yacc.YaccError("Type mismatch.")
+            raise yacc.YaccError('Type mismatch.')
 
 
     # Define CFG (Context free Grammars) from Patito Language
@@ -214,25 +207,26 @@ def PatitoParser():
         if (len(stack_operands) > 0 or 
             len(stack_operators) > 0 or
             len(stack_jumps) > 0):
-            raise yacc.YaccError("Pending quadruples")
-        # Print variables tables
-        df_var_table = pd.DataFrame.from_dict(var_table, orient='index')
-        df_var_table.index.name = 'Variable'
-        if len(df_var_table) > 0:
-            print("-- VARIABLES TABLE --")
-            print(df_var_table, '\n')
-        # Print constants table
-        df_cte_table = pd.DataFrame.from_dict(cte_table, orient='index')
-        df_cte_table.index.name = 'Constant'
-        if len(df_cte_table) > 0:
-            print("-- CONSTANTS TABLE --")
-            print(df_cte_table, '\n')
-        # Print queue of quadriples, intermediate code
-        print("-- QUADRUPLES GENERATED --")
-        i = 0
-        while len(quads) > 0:
-            print(i, quads.pop(0))
-            i += 1
+            raise yacc.YaccError('Pending quadruples')
+        if print_intermediate_code:
+            # Print variables tables
+            df_var_table = pd.DataFrame.from_dict(var_table, orient='index')
+            df_var_table.index.name = 'Variable'
+            if len(df_var_table) > 0:
+                print('-- VARIABLES TABLE --')
+                print(df_var_table, '\n')
+            # Print constants table
+            df_cte_table = pd.DataFrame.from_dict(cte_table, orient='index')
+            df_cte_table.index.name = 'Constant'
+            if len(df_cte_table) > 0:
+                print('-- CONSTANTS TABLE --')
+                print(df_cte_table, '\n')
+            # Print queue of quadriples, intermediate code
+            print('-- QUADRUPLES GENERATED --')
+            i = 0
+            while len(quads) > 0:
+                print(i, quads.pop(0))
+                i += 1
 
     def p_r(p):
         '''r : vars
@@ -251,11 +245,11 @@ def PatitoParser():
         var_id = p[1]
         if var_id not in var_table:
             var_table[var_id] = {
-                "type": None,
-                "memory_dir": None
+                'type': None,
+                'memory_dir': None
             }
         else:
-            print("Error in line", p.lineno(1), ": Variable {", var_id, "} already exists.")
+            print('ERROR in line', p.lineno(1), ': Variable {', var_id, '} already exists.')
 
     def p_p(p):
         '''p : COMA o
@@ -292,20 +286,19 @@ def PatitoParser():
             # Detect if Type mismatch on assignation
             if l_type != r_type:
                 # TODO si operator es '=' se debe asignar resultado a direccion de memoria de operador derecho
-                print("Trying to assign type", r_type, "to type", l_type, "in line", p.lineno(2))
+                print('Trying to assign type', r_type, 'to type', l_type, 'in line', p.lineno(2))
             else:
-                # TODO operator en quad seria direccion de operator
                 quad = (operator, r_operand_mem, None, l_operand_mem)
                 save_quad(quad, None)
         else:
-            raise yacc.YaccError("Unexpected error trying to assign value to variable")
+            raise yacc.YaccError('Unexpected error trying to assign value to variable')
 
     # Check if variable was decleared and add it to operands
     def p_id_assign(p):
         'id_assign : ID'
         var_id = p[1]
         if var_id not in var_table:
-            raise yacc.YaccError("Variable {", var_id, "} was not declared.")
+            raise yacc.YaccError(f'Variable {var_id}, was not declared.')
         else:
             memory_dir = var_table[var_id]['memory_dir']
             var_type = var_table[var_id]['type']
@@ -339,12 +332,12 @@ def PatitoParser():
         # remove '(' from operators stack
         operator = stack_operators.pop()
         if operator != '(':
-            raise yacc.YaccError("Unexpected error with Parenthesis encountered")
+            raise yacc.YaccError('Unexpected error with Parenthesis encountered')
         else:
             operand_mem, operand_type = stack_operands.pop()
             # Check condition is of type 'bool'
             if operand_type != 'bool':
-                raise yacc.YaccError("Type mismatch Do While.")
+                raise yacc.YaccError('Type mismatch in Do While statement.')
             # Add quadriple of Jump to start of cycle if condition is true
             else:
                 jump = stack_jumps.pop()
@@ -360,7 +353,7 @@ def PatitoParser():
         if jump == None:
             quads[fill_quad_jump] = (op, l_mem, r_mem, cont_quads)
         else:
-            raise yacc.YaccError("Unexpected error in condition IF.")
+            raise yacc.YaccError('Unexpected error in condition IF.')
 
     def p_left_par_condition(p):
         'left_par_condition : LEFTPARENTHESIS'
@@ -374,11 +367,11 @@ def PatitoParser():
         # remove '(' from operators stack
         operator = stack_operators.pop()
         if operator != '(':
-            raise yacc.YaccError("Unexpected error with Parenthesis encountered")
+            raise yacc.YaccError('Unexpected error with Parenthesis encountered')
         else:
             operand_mem, operand_type = stack_operands.pop()
             if operand_type != 'bool':
-                raise yacc.YaccError("Type mismatch IF.")
+                raise yacc.YaccError('Type mismatch condition IF.')
             # Unfilled quadriple waiting to know where to jump if false
             else:
                 quad = ('GotoF', operand_mem, None, None)
@@ -400,7 +393,7 @@ def PatitoParser():
         if jump == None:
             quads[fill_quad_jump] = (op, l_mem, r_mem, cont_quads)
         else:
-            raise yacc.YaccError("Unexpected error in condition ELSE.")
+            raise yacc.YaccError('Unexpected error in condition ELSE.')
 
 
     def p_expression(p):
@@ -445,14 +438,13 @@ def PatitoParser():
                         'type': 'string',
                         'memory_dir': cont_cte_string
                     }
-                    memory[cont_cte_string] = cte_string
                     cont_cte_string += 1
                 # Get constant's memory direction and save print quadriple
                 memory_dir = cte_table[cte_string]['memory_dir']
-                quad = ("print", memory_dir, None, None)
+                quad = ('print', memory_dir, None, None)
                 save_quad(quad, None)
             else:
-                raise yacc.YaccError("Unexpected error in COUT.")
+                raise yacc.YaccError('Unexpected error in COUT.')
 
     # Generate quadriple to print expression
     def p_expression_print(p):
@@ -460,10 +452,10 @@ def PatitoParser():
         if (len(stack_operators) > 0 and 
             stack_operators[-1] == 'cout'):
             operand_mem, operand_type = stack_operands.pop()
-            quad = ("print", operand_mem, None, None)
+            quad = ('print', operand_mem, None, None)
             save_quad(quad, None)
         else:
-            raise yacc.YaccError("Unexpected error in COUT.")
+            raise yacc.YaccError('Unexpected error in COUT.')
 
     def p_i(p):
         '''i : empty
@@ -475,9 +467,9 @@ def PatitoParser():
         # remove 'cout' from operators stack
         operator = stack_operators.pop()
         if operator != 'cout':
-            raise yacc.YaccError("Unexpected error in COUT.")
+            raise yacc.YaccError('Unexpected error in COUT.')
         else:
-            quad = ("print", "\n", None, None)
+            quad = ('print', None, None, None)
             save_quad(quad, None)
 
     # Create quadriples of booleans
@@ -539,7 +531,7 @@ def PatitoParser():
         # remove '(' from operators stack
         operator = stack_operators.pop()
         if operator != '(':
-            raise yacc.YaccError("Unexpected error with Parenthesis encountered")
+            raise yacc.YaccError('Unexpected error with Parenthesis encountered')
 
     # Detect change of symbol of constant or variable
     def p_a(p):
@@ -550,14 +542,14 @@ def PatitoParser():
             nonlocal change_symbol
             change_symbol = True
     
-    # Check if variable was decleared, and add it's memory location to operands stack with type
+    # Check if variable was declared, and add it's memory location to operands stack with type
     def p_b(p):
         '''b : ID
              | cte'''
         if p[1] != None:
             var_id = p[1]
             if var_id not in var_table:
-                raise yacc.YaccError("Variable {", var_id, "} was not declared.")
+                raise yacc.YaccError(f'Variable {var_id}, was not declared.')
             else:
                 # Get variable's memory direction and type
                 memory_dir = var_table[var_id]['memory_dir']
@@ -567,21 +559,19 @@ def PatitoParser():
                 if change_symbol:
                     change_symbol = False
                     if var_type == 'int':
-                        # TODO operator en quad seria direccion de operator
                         nonlocal cont_int
                         quad = ('-', None, memory_dir, cont_int)
                         memory_dir = cont_int
                         save_quad(quad, None)
                         cont_int += 1
                     elif var_type == 'float':
-                        # TODO operator en quad seria direccion de operator
                         nonlocal cont_float
                         quad = ('-', None, memory_dir, cont_float)
                         memory_dir = cont_float
                         save_quad(quad, None)
                         cont_float += 1
                     elif var_type == 'bool':
-                        raise yacc.YaccError("Cannot set negative value to bool")
+                        raise yacc.YaccError('Cannot set negative value to bool')
                 # Add variables's memory reference to operands stack
                 stack_operands.append((memory_dir, var_type))
 
@@ -616,17 +606,15 @@ def PatitoParser():
                     'type': 'int',
                     'memory_dir': cont_cte_int
                 }
-                memory[cont_cte_int] = cte
                 cont_cte_int += 1
             elif isinstance(cte, float):
                 cte_table[cte] = {
                     'type': 'float',
                     'memory_dir': cont_cte_float
                 }
-                memory[cont_cte_float] = cte
                 cont_cte_float += 1
             else:
-                raise yacc.YaccError("Constant {", cte, "} is not int or float.")
+                raise yacc.YaccError(f'Constant {cte}, is not int or float.')
         # Get constant's memory direction and type
         memory_dir = cte_table[cte]['memory_dir']
         cte_type = cte_table[cte]['type']
@@ -635,14 +623,12 @@ def PatitoParser():
         if change_symbol:
             change_symbol = False
             if cte_type == 'int':
-                # TODO operator en quad seria direccion de operator
                 nonlocal cont_int
                 quad = ('-', None, memory_dir, cont_int)
                 memory_dir = cont_int
                 save_quad(quad, None)
                 cont_int += 1
             elif cte_type == 'float':
-                # TODO operator en quad seria direccion de operator
                 nonlocal cont_float
                 quad = ('-', None, memory_dir, cont_float)
                 memory_dir = cont_float
@@ -660,73 +646,9 @@ def PatitoParser():
 
     # Error rule for syntax errors
     def p_error(p):
-        print("  Syntax error in input")
+        print('  Syntax error in input')
         if p:
-            print("    Expected token before {", p.value, "} in line", 
-                  p.lineno, " at position ", p.lexpos)
+            print('    Expected token before {', p.value, '} in line', 
+                  p.lineno, ' at position ', p.lexpos)
 
     return yacc.yacc(start='program')
-
-
-
-#####################################################
-# Test Lexer
-#####################################################
-def test_lexer(data):
-    # Create Lexer
-    lexer = PatitoLexer()
-    lexer.input(data)
-    while True:
-        tok = lexer.token()
-        if not tok:
-            break      # No more input
-        # Print detected tokens
-        # print(tok.type, " | ", tok.value)
-
-
-#####################################################
-# Test Parser
-#####################################################
-def test_parser(data):
-    # Create Parser
-    parser = PatitoParser()
-    # Parse input
-    try:
-        parser.parse(data)
-    except Exception as e:
-        print("Parsing error: ", str(e))
-
-
-
-#####################################################
-# Test cases for the Lexer and Parser
-#####################################################
-def test_cases():
-    with open("test_lexer_invalido.txt", "r") as file:
-        data = file.read()
-        print("Testing invalid lexer file...")
-        test_lexer(data)
-        print("\n\n")
-    with open("test_lexer_valido.txt", "r") as file:
-        data = file.read()
-        print("Testing valid lexer file...")
-        test_lexer(data)
-        print("\n\n")
-    with open("test_parser_invalido.txt", "r") as file:
-        data = file.read()
-        print("Testing invalid parser file...")
-        test_parser(data)
-        print("\n\n")
-    with open("test_parser_valido.txt", "r") as file:
-        data = file.read()
-        print("Testing valid parser file...")
-        test_parser(data)
-        print("\n\n")
-    with open("test_quadruples.txt", "r") as file:
-        data = file.read()
-        print("Testing quadruples file...")
-        test_parser(data)
-        print("\n\n")
-
-# Excecute test cases
-test_cases()

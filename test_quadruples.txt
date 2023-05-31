@@ -1,11 +1,11 @@
 program Felipe;
 
 var a, b, c, d: int;
-e, f, g, h, i, j, k: float;
+e, f, g, h, l, q, k: float;
 
 {
     e = a * b + c / d * e - f + g * h;
-    e = a * (b + c * d / e) * f - g * (h * (i + j) - k);
+    e = a * (b + c * d / e) * f - g * (h * (l + q) - k);
     if(a + b * c > d - e){
         a = a + b;
     }
