@@ -1,0 +1,30 @@
+program ELSEIF;
+
+var a, b, c, mult: int;
+
+{
+    a = 1;
+    b = 20;
+    c = 2;
+    if(a > 0){
+        mult = a * b * c;
+        if(mult < 10){
+            if(mult < 5){
+                cout("Your numbers are really low");
+            }
+            else{
+                cout("Try with higher numbers");
+            };
+        }
+        elif(mult < 100){
+            cout("Try with even higher numbers");
+        }
+        else{
+            cout("Good number choice");
+        };
+    }
+    else{
+        cout("a should be greater than 0");
+    };
+}
+end

@@ -11,6 +11,7 @@ reserved = {
     'float' : 'FLOAT',
     'cout' : 'COUT',
     'if' : 'IF',
+    'elif': 'ELSEIF',
     'else' : 'ELSE',
     'do' : 'DO',
     'while' : 'WHILE',
@@ -346,12 +347,19 @@ def PatitoParser(print_intermediate_code = False, quads = [], var_table = {}, ct
 
     # End of If or Else
     def p_condition(p):
-        'condition : IF left_par_condition expression right_par_condition body l SEMICOLON'
+        'condition : IF left_par_condition expression right_par_condition body ef SEMICOLON'
         # FILL end of If / else condition
         fill_quad_jump = stack_jumps.pop()        
         op, l_mem, r_mem, jump = quads[fill_quad_jump]
         if jump == None:
             quads[fill_quad_jump] = (op, l_mem, r_mem, cont_quads)
+            if len(stack_jumps) > 0:
+                fill_quad_jump = stack_jumps.pop()        
+                op, l_mem, r_mem, jump = quads[fill_quad_jump]
+                if op == 'Goto' and jump == None:
+                    quads[fill_quad_jump] = (op, l_mem, r_mem, cont_quads)
+                else:
+                    stack_jumps.append(fill_quad_jump)
         else:
             raise yacc.YaccError('Unexpected error in condition IF.')
 
@@ -378,15 +386,57 @@ def PatitoParser(print_intermediate_code = False, quads = [], var_table = {}, ct
                 save_quad(quad, None)
                 stack_jumps.append(cont_quads-1)
     
+    def p_ef(p):
+        '''ef : empty
+              | l
+              | elif_ef left_par_ef expression right_par_ef body l'''
+        
+    def p_elif_ef(p):
+        'elif_ef : ELSEIF'
+        # Create GOTO
+        quad = ('Goto', None, None, None)
+        save_quad(quad, None)
+        # FILL jump of False if
+        fill_quad_jump = stack_jumps.pop()
+        stack_jumps.append(cont_quads-1)      
+        op, l_mem, r_mem, jump = quads[fill_quad_jump]
+        if jump == None:
+            quads[fill_quad_jump] = (op, l_mem, r_mem, cont_quads)
+        else:
+            raise yacc.YaccError('Unexpected error in condition IF.')
+        
+    def p_left_par_ef(p):
+        'left_par_ef : LEFTPARENTHESIS'
+        # start limiting inner operations with '(' in stack
+        operator = p[1]
+        stack_operators.append(operator)
+
+    # Boolean condition, if false jump and skip
+    def p_right_par_ef(p):
+        'right_par_ef : RIGHTPARENTHESIS'
+        # remove '(' from operators stack
+        operator = stack_operators.pop()
+        if operator != '(':
+            raise yacc.YaccError('Unexpected error with Parenthesis encountered')
+        else:
+            operand_mem, operand_type = stack_operands.pop()
+            if operand_type != 'bool':
+                raise yacc.YaccError('Type mismatch condition IF.')
+            # Unfilled quadriple waiting to know where to jump if false
+            else:
+                quad = ('GotoF', operand_mem, None, None)
+                save_quad(quad, None)
+                stack_jumps.append(cont_quads-1)
+
     def p_l(p):
-        '''l : empty
-             | else_condition body'''
+        '''l : else_condition body'''
     
     # Quadriple to Jump to end of condition if expression was true
     def p_else_condition(p):
         'else_condition : ELSE'
         quad = ('Goto', None, None, None)
         save_quad(quad, None)
+        # Fill jump
         fill_quad_jump = stack_jumps.pop()
         stack_jumps.append(cont_quads-1)
         op, l_mem, r_mem, jump = quads[fill_quad_jump]
