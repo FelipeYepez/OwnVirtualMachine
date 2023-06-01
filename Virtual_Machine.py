@@ -162,12 +162,3 @@ class Virtual_Machine:
     def print_memory(self):
         for i in range(len(self.memory)):
             print(f"Memory[{i}] = {self.memory[i]}")
-
-    # def debug(self):
-    #     print(self.cte_table)
-    #     print()
-    #     print(self.var_table)
-    #     print()
-    #     print(self.quadruples)
-
-

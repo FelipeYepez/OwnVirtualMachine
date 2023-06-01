@@ -59,6 +59,11 @@ def test_cases():
         print('Testing quadruples file...')
         test_parser(data)
         print('\n\n')
+    with open('test_elseif.txt', 'r') as file:
+        data = file.read()
+        print('Testing ELSEIF file...')
+        test_parser(data)
+        print('\n\n')
 
 # Excecute test cases
 test_cases()
